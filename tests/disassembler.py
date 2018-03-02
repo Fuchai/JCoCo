@@ -156,7 +156,7 @@ def disassemble(obj, indent=""):
                     labelString = " "*10
                     
                 if mnemonic in ["SETUP_LOOP","JUMP_FORWARD","FOR_ITER","SETUP_EXCEPT","SETUP_FINALLY"] :
-                    location = str(int(address) + int(operand) + 3)
+                    location = str(int(address) + int(operand) + 2) # modified by Jason, not guaranteed.
                     inst = labelString + mnemonic + " "*(25-len(mnemonic)) + "label%02d"%targets[location]
                 elif "JUMP" in mnemonic:
                     if operand in targets:
