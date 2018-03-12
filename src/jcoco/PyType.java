@@ -42,6 +42,8 @@ public class PyType extends PyCallableAdapter {
         PyListIteratorType,
         PyFunListType,
         PyFunListIteratorType,
+        PyFrozenSetType,
+        PyFrozenSetIteratorType,
         PyStrIteratorType,
         PyCodeType,
         PyTupleType,
@@ -70,7 +72,7 @@ public class PyType extends PyCallableAdapter {
 
         this.dict.put("__str__", new PyCallableAdapter() {
             @Override
-            public PyObject __call__(ArrayList<PyObject> args) {
+            public PyObject __call__(PyCallStack callStack, ArrayList<PyObject> args) {
                 if (args.size() != 0) {
                     throw new PyException(ExceptionType.PYWRONGARGCOUNTEXCEPTION,
                             "TypeError: expected 0 argument, got " + args.size());
@@ -97,13 +99,13 @@ public class PyType extends PyCallableAdapter {
     }
 
     @Override
-    public PyObject __call__(ArrayList<PyObject> args) {
+    public PyObject __call__(PyCallStack callStack, ArrayList<PyObject> args) {
 
         if (args.size() == 1) {
             PyObject arg = args.get(0);
             args.remove(0);
             String funName = "__" + this.str() + "__";
-            return arg.callMethod(funName, args);
+            return arg.callMethod(callStack,funName, args);
         }
 
         throw new PyException(ExceptionType.PYWRONGARGCOUNTEXCEPTION, "TypeError: expected 1 argument, got " + args.size());
