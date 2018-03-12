@@ -13,20 +13,26 @@ package jcoco;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 
+// Done
+// Static?
 public class PyFrozenSetIterator extends PyPrimitiveTypeAdapter {
 
-    private PyList lst;
-    private int index = 0;
+    private PyFrozenSet frozenSet;
+    private Iterator<PyObject> hashSetIterator;
 
-    public PyFrozenSetIterator(PyList lst) {
-        super("list_iterator", PyType.PyTypeId.PyListIteratorType);
-        this.lst = lst;
+    // Done
+    // TODO
+    public PyFrozenSetIterator(PyFrozenSet frozenSet) {
+        super("frozen_set_iterator", PyType.PyTypeId.PyFrozenSetIteratorType);
+        this.frozenSet = frozenSet;
         initMethods(funs());
-
+        this.hashSetIterator=this.frozenSet.hashSet().iterator();
     }
 
-    public static HashMap<String, PyCallable> funs() {
+    public HashMap<String, PyCallable> funs() {
         HashMap<String, PyCallable> funs = new HashMap<String, PyCallable>();
 
         funs.put("__iter__", new PyCallableAdapter() {
@@ -51,11 +57,7 @@ public class PyFrozenSetIterator extends PyPrimitiveTypeAdapter {
 
                 PyFrozenSetIterator self = (PyFrozenSetIterator) args.get(args.size() - 1);
 
-                if (self.index >= self.lst.len()) {
-                    throw new PyException(PyException.ExceptionType.PYSTOPITERATIONEXCEPTION, "stop it");
-                }
-
-                return self.lst.list().get(self.index++);
+                return hashSetIterator.next();
             }
         });
 

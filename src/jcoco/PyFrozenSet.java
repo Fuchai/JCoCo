@@ -8,12 +8,14 @@ public class PyFrozenSet extends PyPrimitiveTypeAdapter {
 
     private HashSet<PyObject> data;
 
+    // TODO
     public PyFrozenSet(HashSet<PyObject> data) {
-        super("list", PyType.PyTypeId.PyListType);
+        super("frozen_set", PyType.PyTypeId.PyFrozenSetType);
         this.data = data;
         initMethods(funs());
     }
 
+    // Done
     public PyFrozenSet(){
         this(new HashSet<PyObject>());
     }
@@ -34,7 +36,7 @@ public class PyFrozenSet extends PyPrimitiveTypeAdapter {
         return this.data.size();
     }
 
-    public HashSet<PyObject> list() {
+    public HashSet<PyObject> hashSet() {
         return this.data;
     }
 
@@ -131,6 +133,7 @@ public class PyFrozenSet extends PyPrimitiveTypeAdapter {
                 return new PyInt(self.data.size());
             }
         });
+        // Done
         funs.put("__iter__", new PyCallableAdapter() {
             @Override
             public PyObject __call__(PyCallStack callStack, ArrayList<PyObject> args) {
@@ -139,7 +142,7 @@ public class PyFrozenSet extends PyPrimitiveTypeAdapter {
                             "TypeError: expected 1 arguments, got " + args.size());
                 }
 
-                PyList self = (PyList) args.get(args.size() - 1);
+                PyFrozenSet self = (PyFrozenSet) args.get(args.size() - 1);
                 return new PyFrozenSetIterator(self);
             }
         });
