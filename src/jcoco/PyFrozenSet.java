@@ -119,9 +119,9 @@ public class PyFrozenSet extends PyPrimitiveTypeAdapter {
         funs.put("union", new PyCallableAdapter() {
             @Override
             public PyObject __call__(PyCallStack callStack, ArrayList<PyObject> args) {
-                if (args.size() != 1) {
+                if (args.size() != 2) {
                     throw new PyException(PyException.ExceptionType.PYWRONGARGCOUNTEXCEPTION,
-                            "TypeError: expected 1 arguments, got " + args.size());
+                            "TypeError: expected 2 arguments, got " + args.size());
                 }
 
                 PyFrozenSet self = (PyFrozenSet) args.get(args.size() - 1);
@@ -130,9 +130,69 @@ public class PyFrozenSet extends PyPrimitiveTypeAdapter {
                 for (int i=0;i<args.size()-1;i++){
                     result.addAll(((PyFrozenSet) args.get(i)).data);
                 }
-                return new PyInt(self.data.size());
+                return new PyFrozenSet(result);
             }
         });
+        // Done
+        funs.put("intersection", new PyCallableAdapter(){
+            @Override
+            public PyObject __call__(PyCallStack callStack, ArrayList<PyObject> args) {
+                if (args.size() != 2) {
+                    throw new PyException(PyException.ExceptionType.PYWRONGARGCOUNTEXCEPTION,
+                            "TypeError: expected 2 arguments, got " + args.size());
+                }
+
+                PyFrozenSet self = (PyFrozenSet) args.get(args.size() - 1);
+
+                HashSet<PyObject> result = (HashSet<PyObject>) self.data.clone();
+                for (int i = 0; i < args.size() - 1; i++) {
+                    result.retainAll(((PyFrozenSet) args.get(i)).data);
+                }
+                return new PyFrozenSet(result);
+            }
+        });
+        // Done
+        funs.put("isdisjoint", new PyCallableAdapter(){
+            @Override
+            public PyObject __call__(PyCallStack callStack, ArrayList<PyObject> args) {
+                if (args.size()!=2){
+                    throw new PyException(PyException.ExceptionType.PYWRONGARGCOUNTEXCEPTION,
+                            "TypeError: expected 2 arguments, got " + args.size());
+                }
+                PyFrozenSet self = (PyFrozenSet) args.get(args.size() - 1);
+
+                HashSet<PyObject> result = (HashSet<PyObject>) self.data.clone();
+                for (int i = 0; i < args.size() - 1; i++) {
+                    result.retainAll(((PyFrozenSet) args.get(i)).data);
+                }
+                return new PyBool(result.isEmpty());
+            }
+        });
+        funs.put("difference", new PyCallableAdapter(){
+            @Override
+            public PyObject __call__(PyCallStack callStack, ArrayList<PyObject> args) {
+                return super.__call__(callStack, args);
+            }
+        });
+
+        funs.put("symmetric_difference", new PyCallableAdapter(){
+            @Override
+            public PyObject __call__(PyCallStack callStack, ArrayList<PyObject> args) {
+                return super.__call__(callStack, args);
+            }
+        });
+        funs.put("issuperset", new PyCallableAdapter(){
+            @Override
+            public PyObject __call__(PyCallStack callStack, ArrayList<PyObject> args) {
+                return super.__call__(callStack, args);
+            }
+        });
+        funs.put('__contains__', new PyCallableAdapter(){
+            @Override
+            public PyObject __call__(PyCallStack callStack, ArrayList<PyObject> args) {
+                return super.__call__(callStack, args);
+            }
+        })
         // Done
         funs.put("__iter__", new PyCallableAdapter() {
             @Override
@@ -146,6 +206,7 @@ public class PyFrozenSet extends PyPrimitiveTypeAdapter {
                 return new PyFrozenSetIterator(self);
             }
         });
+        // Done
 //
 //        funs.put("append", new PyCallableAdapter() {
 //            @Override
@@ -212,6 +273,8 @@ public class PyFrozenSet extends PyPrimitiveTypeAdapter {
 //            }
 //        });
 
+
+        // Done
         funs.put("__eq__", new PyCallableAdapter() {
             @Override
             public PyObject __call__(PyCallStack callStack, ArrayList<PyObject> args) {
@@ -251,6 +314,7 @@ public class PyFrozenSet extends PyPrimitiveTypeAdapter {
             }
         });
 
+        // Done
         funs.put("__ne__", new PyCallableAdapter() {
             @Override
             public PyObject __call__(PyCallStack callStack, ArrayList<PyObject> args) {
