@@ -107,6 +107,14 @@ public class JCoCo {
         PyTypes.put(PyTypeId.PyListType, listType);
         listType.setInstanceFuns(PyList.funs());
 
+        PyType frozensetType = new PyType("frozenset", PyTypeId.PyFrozenSetType);
+        PyTypes.put(PyTypeId.PyFrozenSetType, frozensetType);
+        frozensetType.setInstanceFuns(PyFrozenSet.funs());
+
+        PyType frozensetIteratorType = new PyType("frozenset_iterator", PyTypeId.PyFrozenSetIteratorType);
+        PyTypes.put(PyTypeId.PyFrozenSetIteratorType, frozensetIteratorType);
+        frozensetIteratorType.setInstanceFuns(PyFrozenSetIterator.funs());
+
         PyType funlistType = new PyType("funlist", PyTypeId.PyFunListType);
         PyTypes.put(PyTypeId.PyFunListType, funlistType);
         funlistType.setInstanceFuns(PyFunList.funs());
@@ -219,6 +227,7 @@ public class JCoCo {
             globals.put("str", PyTypes.get(PyTypeId.PyStrType));
             globals.put("funlist", PyTypes.get(PyTypeId.PyFunListType));
             globals.put("list", PyTypes.get(PyTypeId.PyListType));
+            globals.put("frozenset", PyTypes.get(PyTypeId.PyFrozenSetType));
             globals.put("type", PyTypes.get(PyTypeId.PyTypeType));
             globals.put("bool", PyTypes.get(PyTypeId.PyBoolType));
             globals.put("range", PyTypes.get(PyTypeId.PyRangeTypeId));

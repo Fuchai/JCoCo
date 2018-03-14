@@ -10,7 +10,7 @@ public class PyFrozenSet extends PyPrimitiveTypeAdapter {
 
     // TODO
     public PyFrozenSet(HashSet<PyObject> data) {
-        super("frozen_set", PyType.PyTypeId.PyFrozenSetType);
+        super("frozenset", PyType.PyTypeId.PyFrozenSetType);
         this.data = data;
         initMethods(funs());
     }
@@ -331,8 +331,6 @@ public class PyFrozenSet extends PyPrimitiveTypeAdapter {
                 }
 
                 PyFrozenSet other = (PyFrozenSet) args.get(0);
-                ArrayList<PyObject> newargs = new ArrayList<PyObject>();
-
                 if (self.data.size() != other.data.size()) {
                     return new PyBool(false);
                 }
@@ -354,6 +352,7 @@ public class PyFrozenSet extends PyPrimitiveTypeAdapter {
             }
         });
 
+
         // Done
         funs.put("__ne__", new PyCallableAdapter() {
             @Override
@@ -363,7 +362,7 @@ public class PyFrozenSet extends PyPrimitiveTypeAdapter {
                             "TypeError: expected 2 arguments, got " + args.size());
                 }
 
-                PyList self = (PyList) args.get(args.size() - 1);
+                PyFrozenSet self = (PyFrozenSet) args.get(args.size() - 1);
                 PyBool result = (PyBool) self.callMethod(callStack, "__eq__", selflessArgs(args));
                 boolean v = result.getVal();
 
