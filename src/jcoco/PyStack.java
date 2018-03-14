@@ -57,6 +57,8 @@ public class PyStack<T> {
         boolean debugging = JCoCo.stepOverInstructions;
         JCoCo.stepOverInstructions = false;
 
+        int callStackSize = JCoCo.callStack.size();
+
         StringBuffer out = new StringBuffer();
 
         out.append("top\n---\n");
@@ -66,6 +68,7 @@ public class PyStack<T> {
         cursor = this.tos;
 
         while (cursor != null) {
+
             try {
                 out.append(cursor.object + "\n");
             } catch (PyException ex) {
@@ -75,6 +78,7 @@ public class PyStack<T> {
                     out.append("<" + ((PyObject) cursor.object).getType() + " object at 0x" + Integer.toHexString(System.identityHashCode(this)) + ">\n");
                 }
             }
+
             cursor = cursor.next;
         }
 
@@ -83,7 +87,12 @@ public class PyStack<T> {
         // restore step over debugging if active.
         JCoCo.stepOverInstructions = debugging;
 
+        while (JCoCo.callStack.size() > callStackSize) {
+            JCoCo.callStack.pop(); // restore call stack after debugging.
+        }
+
         return out.toString();
+
     }
 
     // This is used only by debugging to leave out marker objects when looking at the 
@@ -92,6 +101,8 @@ public class PyStack<T> {
         // temporarily turn off stepping if it is on.
         boolean debugging = JCoCo.stepOverInstructions;
         JCoCo.stepOverInstructions = false;
+
+        int callStackSize = JCoCo.callStack.size();
 
         StringBuffer out = new StringBuffer();
 
@@ -121,10 +132,14 @@ public class PyStack<T> {
         // restore step over debugging if active.
         JCoCo.stepOverInstructions = debugging;
 
+        while (JCoCo.callStack.size() > callStackSize) {
+            JCoCo.callStack.pop(); // restore call stack after debugging.
+        }
+
         return out.toString();
     }
 
-    public int getCount() {
+    public int size() {
         return this.count;
     }
 
