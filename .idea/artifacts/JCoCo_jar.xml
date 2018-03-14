@@ -1,0 +1,6 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="JCoCo:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/JCoCo_jar</output-path>
+    <root id="archive" name="JCoCo.jar" />
+  </artifact>
+</component>
