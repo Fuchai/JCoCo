@@ -50,6 +50,8 @@ public class PyType extends PyCallableAdapter {
         PyExceptionTypeId,
         PyDictType,
         PyDictKeyIteratorType,
+        PyFrozenSetType,
+        PyFrozenSetIteratorType,
         PyBaseCallable,
         PyMapType,
         PySuperTypeId,
