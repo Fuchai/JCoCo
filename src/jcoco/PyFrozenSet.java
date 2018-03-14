@@ -119,10 +119,29 @@ public class PyFrozenSet extends PyPrimitiveTypeAdapter {
         funs.put("union", new PyCallableAdapter() {
             @Override
             public PyObject __call__(ArrayList<PyObject> args) {
-                if (args.size() != 2) {
-                    throw new PyException(PyException.ExceptionType.PYWRONGARGCOUNTEXCEPTION,
-                            "TypeError: expected 2 arguments, got " + args.size());
+//                if (args.size() != 2) {
+//                    throw new PyException(PyException.ExceptionType.PYWRONGARGCOUNTEXCEPTION,
+//                            "TypeError: expected 2 arguments, got " + args.size());
+//                }
+
+                PyFrozenSet self = (PyFrozenSet) args.get(args.size() - 1);
+
+                HashSet<PyObject> result = (HashSet<PyObject>) self.data.clone();
+                // TODO check if adding correctly
+                for (int i=0;i<args.size()-1;i++){
+                    result.addAll(((PyFrozenSet) args.get(i)).data);
                 }
+                return new PyFrozenSet(result);
+            }
+        });
+
+        funs.put("__or__", new PyCallableAdapter() {
+            @Override
+            public PyObject __call__(ArrayList<PyObject> args) {
+//                if (args.size() != 2) {
+//                    throw new PyException(PyException.ExceptionType.PYWRONGARGCOUNTEXCEPTION,
+//                            "TypeError: expected 2 arguments, got " + args.size());
+//                }
 
                 PyFrozenSet self = (PyFrozenSet) args.get(args.size() - 1);
 
@@ -149,6 +168,19 @@ public class PyFrozenSet extends PyPrimitiveTypeAdapter {
                 for (int i = 0; i < args.size() - 1; i++) {
                     result.retainAll(((PyFrozenSet) args.get(i)).data);
                 }
+                return new PyFrozenSet(result);
+            }
+        });
+
+        funs.put("copy", new PyCallableAdapter(){
+            @Override
+            public PyObject __call__(ArrayList<PyObject> args){
+                if (args.size()!=1){
+                    throw new PyException(PyException.ExceptionType.PYWRONGARGCOUNTEXCEPTION,
+                            "TypeError: expected 1 arguments, got " + args.size());
+                }
+                PyFrozenSet self = (PyFrozenSet) args.get(args.size() - 1);
+                HashSet<PyObject> result = (HashSet<PyObject>) self.data.clone();
                 return new PyFrozenSet(result);
             }
         });
@@ -220,6 +252,32 @@ public class PyFrozenSet extends PyPrimitiveTypeAdapter {
             }
         });
 
+        funs.put("__lt__", new PyCallableAdapter(){
+            @Override
+            public PyObject __call__(ArrayList<PyObject> args) {
+                if (args.size() != 2) {
+                    throw new PyException(PyException.ExceptionType.PYWRONGARGCOUNTEXCEPTION,
+                            "TypeError: expected 2 arguments, got " + args.size());
+                }
+                PyFrozenSet self = (PyFrozenSet) args.get(1);
+                PyFrozenSet other = (PyFrozenSet) args.get(0);
+                return new PyBool(other.data.containsAll(self.data));
+            }
+        });
+
+        funs.put("__ge__", new PyCallableAdapter(){
+            @Override
+            public PyObject __call__(ArrayList<PyObject> args) {
+                if (args.size() != 2) {
+                    throw new PyException(PyException.ExceptionType.PYWRONGARGCOUNTEXCEPTION,
+                            "TypeError: expected 2 arguments, got " + args.size());
+                }
+                PyFrozenSet self = (PyFrozenSet) args.get(1);
+                PyFrozenSet other = (PyFrozenSet) args.get(0);
+                return new PyBool(self.data.containsAll(other.data));
+            }
+        });
+
         // Done
         funs.put("__contains__", new PyCallableAdapter(){
             @Override
@@ -233,6 +291,19 @@ public class PyFrozenSet extends PyPrimitiveTypeAdapter {
                 return new PyBool(self.data.contains(element));
             }
         });
+        funs.put("__notin__", new PyCallableAdapter() {
+            @Override
+            public PyObject __call__(ArrayList<PyObject> args) {
+                if (args.size() != 2) {
+                    throw new PyException(PyException.ExceptionType.PYWRONGARGCOUNTEXCEPTION,
+                            "TypeError: expected 2 arguments, got " + args.size());
+                }
+                PyFrozenSet self= (PyFrozenSet) args.get(1);
+                PyObject element = args.get(0);
+                return new PyBool(!self.data.contains(element));
+            }
+        });
+
         // Done
         funs.put("__iter__", new PyCallableAdapter() {
             @Override

@@ -32,7 +32,7 @@ public class PyFrozenSetIterator extends PyPrimitiveTypeAdapter {
         this.hashSetIterator=this.frozenSet.hashSet().iterator();
     }
 
-    static public HashMap<String, PyCallable> funs() {
+    public static HashMap<String, PyCallable> funs() {
         HashMap<String, PyCallable> funs = new HashMap<String, PyCallable>();
 
         funs.put("__iter__", new PyCallableAdapter() {
@@ -56,8 +56,15 @@ public class PyFrozenSetIterator extends PyPrimitiveTypeAdapter {
                 }
 
                 PyFrozenSetIterator self = (PyFrozenSetIterator) args.get(args.size() - 1);
-                // TODO wrong method here.
-                return self.hashSetIterator.next();
+                // TODO wrong method here?
+                // What if you request iterators twice? Then the two iterators will
+                // share the same static self, correct?
+                // This is the problem for PyListIterator too
+                if (self.hashSetIterator.hasNext()){
+                    return self.hashSetIterator.next();
+                }else{
+                    throw new PyException(PyException.ExceptionType.PYSTOPITERATIONEXCEPTION, "stop it");
+                }
             }
         });
 

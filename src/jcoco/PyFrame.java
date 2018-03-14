@@ -51,7 +51,7 @@ class PyFrame extends PyObjectAdapter {
     private PyStack<PyObject> opStack;
     private PyStack<Integer> blockStack;
     private final String[] cmp_op = {"__lt__", "__le__", "__eq__", "__ne__", "__gt__", "__ge__",
-        "__contains__", "__notin__", "is__", "is_not", "__excmatch",
+        "__contains__", "__notin__", "is__", "is_not", "__excmatch", "__or__",
         "BAD"};
 
     public PyFrame(PyCode code, ArrayList<PyObject> args, HashMap<String, PyObject> globals,
@@ -403,6 +403,14 @@ class PyFrame extends PyObjectAdapter {
                         if (bu.getVal() == false) {
                             this.PC = operand;
                         }
+                        break;
+                    case BINARY_OR:
+                        v = this.safetyPop();
+                        u = this.safetyPop();
+                        args = new ArrayList<PyObject>();
+                        args.add(v);
+                        w = u.callMethod("__or__", args);
+                        this.opStack.push(w);
                         break;
                     case BINARY_ADD:
                     case INPLACE_ADD:
